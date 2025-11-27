@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MongoDB Shell CRUD Showcase</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0f0f0f;
+      color: #e6e6e6;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      text-align: center;
+      padding: 30px;
+      background: #14a34a;
+      color: #000;
+      font-size: 28px;
+      font-weight: bold;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 20px auto;
+      padding: 20px;
+    }
+    .pair {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .section {
+      flex: 1;
+      min-width: 320px;
+      background: #1a1a1a;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      box-shadow: 0 0 15px rgba(0, 255, 100, 0.2);
+      transition: transform .3s ease, box-shadow .3s ease;
+    }
+    .section:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 25px rgba(0, 255, 100, .5);
+    }
+    .section h2 {
+      color: #14a34a;
+      margin-top: 0;
+    }
+    pre {
+      background: #0d0d0d;
+      padding: 15px;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid #14a34a;
+      position: relative;
+    }
+    .copy-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: #14a34a;
+      border: none;
+      color: #000;
+      padding: 5px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+    button.run {
+      background: #14a34a;
+      border: none;
+      padding: 10px 16px;
+      color: #000;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    button.run:hover {
+      opacity: 0.8;
+    }
+    .output {
+      background: #111;
+      border-left: 4px solid #14a34a;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 6px;
+      display: none;
+      animation: fadeIn .4s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <header>✨ MongoDB Shell CRUD Interactive Showcase ✨</header>
+  <div class="container">
+
+    <!-- CREATE PAIR -->
+    <div class="pair">
+      <div class="section">
+        <h2>🌱 Insert One</h2>
+        <pre><button class="copy-btn" onclick="copy(this)">Copy</button>db.students.insertOne({ name: "Asha", age: 21, dept: "MCA" })</pre>
+        <button class="run" onclick="showOutput('create1')">Run</button>
+        <div id="create1" class="output">✔ Document inserted successfully.</div>
+      </div>
+
+      <div class="section">
+        <h2>🌱 Insert Many</h2>
+        <pre><button class="copy-btn" onclick="copy(this)">Copy</button>db.students.insertMany([
+  { name: "Arjun", age: 22, dept: "MCA" },
+  { name: "Bhuvana", age: 23, dept: "MBA" },
+  { name: "Karan", age: 21, dept: "BCA" }
+])</pre>
+        <button class="run" onclick="showOutput('createMany')">Run</button>
+        <div id="createMany" class="output">✔ 3 documents inserted.</div>
+      </div>
+    </div>
+
+    <!-- READ PAIR -->
+    <div class="pair">
+      <div class="section">
+        <h2>🔍 Read All</h2>
+        <pre><button class="copy-btn" onclick="copy(this)">Copy</button>db.students.find().pretty()</pre>
+        <button class="run" onclick="showOutput('read1')">Run</button>
+        <div id="read1" class="output">📄 Returned all documents.</div>
+      </div>
+
+      <div class="section">
+        <h2>🔍 Read With Filter</h2>
+        <pre><button class="copy-btn" onclick="copy(this)">Copy</button>db.students.find({ dept: "MCA" }).pretty()</pre>
+        <button class="run" onclick="showOutput('readFilter')">Run</button>
+        <div id="readFilter" class="output">📄 Returned MCA students.</div>
+      </div>
+    </div>
+
+    <!-- UPDATE PAIR -->
+    <div class="pair">
+      <div class="section">
+        <h2>🔧 Update One</h2>
+        <pre><button class="copy-btn" onclick="copy(this)">Copy</button>db.students.updateOne({ name: "Naveen" }, { $set: { age: 22 } })</pre>
+        <button class="run" onclick="showOutput('update1')">Run</button>
+        <div id="update1" class="output">✨ 1 document matched, 1 modified.</div>
+      </div>
+
+      <div class="section">
+        <h2>🔧 Update Many</h2>
+        <pre><button class="copy-btn" onclick="copy(this)">Copy</button>db.students.updateMany(
+  { dept: "MCA" },
+  { $set: { year: 2025 } }
+)</pre>
+        <button class="run" onclick="showOutput('updateMany')">Run</button>
+        <div id="updateMany" class="output">✨ Multiple documents updated.</div>
+      </div>
+    </div>
+
+    <!-- DELETE PAIR -->
+    <div class="pair">
+      <div class="section">
+        <h2>🗑 Delete One</h2>
+        <pre><button class="copy-btn" onclick="copy(this)">Copy</button>db.students.deleteOne({ name: "Charan" })</pre>
+        <button class="run" onclick="showOutput('delete1')">Run</button>
+        <div id="delete1" class="output">❌ 1 document deleted.</div>
+      </div>
+
+      <div class="section">
+        <h2>🗑 Delete Many</h2>
+        <pre><button class="copy-btn" onclick="copy(this)">Copy</button>db.students.deleteMany({ dept: "MBA" })</pre>
+        <button class="run" onclick="showOutput('deleteMany')">Run</button>
+        <div id="deleteMany" class="output">❌ All MBA students deleted.</div>
+      </div>
+    </div>
+
+  </div>
+
+<script>
+function showOutput(id) {
+  document.getElementById(id).style.display = "block";
+}
+function copy(btn) {
+  const code = btn.parentElement.innerText.replace("Copy", "");
+  navigator.clipboard.writeText(code);
+  btn.innerText = "Copied";
+  setTimeout(()=> btn.innerText="Copy", 1000);
+}
+</script>
+
+</body>
+</html>
